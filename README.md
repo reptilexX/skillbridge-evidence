@@ -2,7 +2,7 @@
 
 Evidence-based competency verification for students. Instead of trusting self-reported CV skills, the system gives a hands-on task, scores the submission with deterministic checks plus an LLM rubric, finds the exact gap, and issues a short follow-up task. Passing updates an auditable competency record.
 
-**Live demo:** <your Vercel URL>
+**Live demo:** <skillbridge-evidence.vercel.app>
 **Video:** <your YouTube URL>
 
 ## Flow
