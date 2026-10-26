@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SkillBridge Evidence: prove the skill, don’t claim it</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef2f1;--ink:#14282b;--mute:#52686b;--line:#c9d6d4;--panel:#fbfdfc;--teal:#0b6b66;--amber:#b4580a;--ok:#13795b;--bad:#b3261e;--code:#10201f;--codeink:#d9efe9}
+@media(prefers-color-scheme:dark){:root{--bg:#0e1819;--ink:#e3efed;--mute:#93aaa7;--line:#27393a;--panel:#142223;--teal:#5fd0c6;--amber:#f0a35e;--ok:#5fd6a7;--bad:#ff8a80;--code:#0a1213;--codeink:#cdeee7}}
+*{box-sizing:border-box}
+html{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 "Source Sans 3",system-ui,sans-serif;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+.wrap{max-width:1040px;margin:0 auto;padding:40px 20px 64px}
+h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;line-height:1.1;margin:0}
+h1{font-size:clamp(34px,6vw,60px);max-width:16ch;letter-spacing:-.02em}
+.lede{max-width:56ch;color:var(--mute);margin:16px 0 36px;font-size:19px}
+.claim{display:inline-flex;gap:10px;align-items:center;border:1px dashed var(--mute);padding:6px 12px;border-radius:999px;color:var(--mute);margin-bottom:22px}
+.claim s{color:var(--ink)}
+.grid{display:grid;grid-template-columns:1.25fr 1fr;gap:20px}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px}
+.panel h2{font-size:22px;margin-bottom:6px}
+.sub{color:var(--mute);margin:0 0 14px}
+textarea{width:100%;min-height:150px;background:var(--code);color:var(--codeink);border:1px solid var(--line);border-radius:8px;padding:14px;font:15px/1.5 ui-monospace,Menlo,Consolas,monospace;resize:vertical}
+textarea:focus,button:focus-visible,input:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+button{font:600 16px "Source Sans 3",sans-serif;background:var(--teal);color:#fff;border:0;border-radius:8px;padding:10px 18px;cursor:pointer;margin-top:12px}
+@media(prefers-color-scheme:dark){button{color:#06201e}}
+button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);margin-left:8px}
+.checks{list-style:none;margin:0;padding:0}
+.checks li{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+.checks li:last-child{border:0}
+.mark{width:22px;height:22px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:13px;font-weight:700;border:2px solid var(--line);color:var(--mute)}
+.pass .mark{background:var(--ok);border-color:var(--ok);color:#fff}
+.fail .mark{background:var(--bad);border-color:var(--bad);color:#fff}
+.gap{border-left:4px solid var(--amber);padding:10px 14px;background:color-mix(in srgb,var(--amber) 10%,transparent);border-radius:0 8px 8px 0;margin:14px 0}
+.hide{display:none}
+label.opt{display:block;padding:10px 12px;border:1px solid var(--line);border-radius:8px;margin:8px 0;cursor:pointer}
+label.opt:has(input:checked){border-color:var(--teal)}
+.badge{display:flex;gap:14px;align-items:center;padding:14px;border:2px solid var(--line);border-radius:10px;margin-bottom:16px}
+.badge.on{border-color:var(--ok)}
+.seal{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;border:2px dashed var(--mute);color:var(--mute);font-weight:700}
+.on .seal{border:2px solid var(--ok);background:var(--ok);color:#fff}
+.log{font:13px/1.5 ui-monospace,Menlo,Consolas,monospace;color:var(--mute);max-height:170px;overflow:auto;margin:0;padding-left:0;list-style:none}
+.log li{padding:2px 0}
+.flow{margin-top:36px;color:var(--mute)}
+.flow b{color:var(--ink)}
+footer{margin-top:40px;color:var(--mute);font-size:14px}
+a{color:var(--teal)}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="claim">Resume says: <s>SQL Expert</s> unverified</div>
+  <h1>Prove the skill. Don’t just list it.</h1>
+  <p class="lede">SkillBridge Evidence gives students a real task, tests their answer with checks that always give the same result, finds the exact gap, and issues a short follow-up task. Employers see a record backed by evidence.</p>
+
+  <div class="grid">
+    <section class="panel" aria-labelledby="t1">
+      <h2 id="t1">Task: fix a slow query</h2>
+      <p class="sub">Orders for customers in Bangladesh load slowly. Rewrite the query below so it passes every check.</p>
+      <textarea id="sql" spellcheck="false" aria-label="SQL editor">SELECT *
+FROM orders o, customers c
+WHERE o.customer_id = c.id
+  AND c.country = 'BD'
+ORDER BY o.created_at;</textarea>
+      <button id="run">Run checks</button><button class="ghost" id="reset">Reset</button>
+      <ul class="checks" id="checks" aria-live="polite" style="margin-top:14px"></ul>
+      <div id="gap" class="gap hide"></div>
+      <div id="micro" class="hide">
+        <h3 style="font-size:19px;margin:8px 0">5-minute follow-up: indexing</h3>
+        <p class="sub">Your query is correct. Which index helps most with the join on <code>orders.customer_id</code>?</p>
+        <label class="opt"><input type="radio" name="ix" value="a"> CREATE INDEX ON orders(created_at)</label>
+        <label class="opt"><input type="radio" name="ix" value="b"> CREATE INDEX ON orders(customer_id)</label>
+        <label class="opt"><input type="radio" name="ix" value="c"> CREATE INDEX ON customers(name)</label>
+        <button id="ans">Submit answer</button>
+        <p id="ansmsg" class="sub" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <aside>
+      <section class="panel">
+        <h2>Competency record</h2>
+        <div class="badge" id="badge"><div class="seal" id="seal">?</div><div><strong>SQL query debugging</strong><div class="sub" id="bstat" style="margin:0">Not verified yet</div></div></div>
+        <h3 style="font-size:16px;margin-bottom:6px">Evidence log</h3>
+        <ul class="log" id="log"><li>Waiting for first submission.</li></ul>
+      </section>
+    </aside>
+  </div>
+
+  <p class="flow"><b>How it works:</b> claim → live task → test and rubric checks → gap found → short follow-up task → verified record. In this demo the checks run in your browser. The full version runs submissions in a sandbox with Pytest and adds an LLM rubric for explanations.</p>
+  <footer>Built for CloudCamp Bangladesh × International AI Builders Congress. Source: add your GitHub link here.</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const rules=[
+ {t:'Uses an explicit JOIN ... ON instead of a comma join',f:s=>/\bjoin\s+customers?\b[\s\S]*\bon\b/i.test(s)},
+ {t:'Selects only the columns needed (no SELECT *)',f:s=>/select\b/i.test(s)&&!/select\s+(distinct\s+)?(\w+\.)?\*/i.test(s)},
+ {t:'Filters on country = \'BD\'',f:s=>/country\s*=\s*'BD'/i.test(s)},
+ {t:'Keeps ORDER BY created_at',f:s=>/order\s+by\s+(\w+\.)?created_at/i.test(s)}
+];
+const start=$('sql').value;
+function log(m){const l=$('log');if(l.children.length===1&&l.children[0].textContent.startsWith('Waiting'))l.innerHTML='';const li=document.createElement('li');li.textContent=new Date().toLocaleTimeString()+'  '+m;l.prepend(li)}
+$('run').onclick=()=>{
+  const s=$('sql').value;let ok=0;
+  $('checks').innerHTML=rules.map(r=>{const p=r.f(s);if(p)ok++;return `<li class="${p?'pass':'fail'}"><span class="mark">${p?'✓':'✕'}</span><span>${r.t}</span></li>`}).join('');
+  log(`submission checked: ${ok}/${rules.length} checks passed`);
+  const gap=$('gap'),mi=$('micro');
+  if(ok<rules.length){gap.classList.remove('hide');gap.textContent='Gap found: query structure. Fix the failed checks, then run again.';mi.classList.add('hide')}
+  else{gap.classList.remove('hide');gap.textContent='Gap found: indexing and execution plans. The query is correct but nothing shows you know why it is fast.';mi.classList.remove('hide');log('gap detected: indexing; follow-up task issued')}
+};
+$('reset').onclick=()=>{$('sql').value=start;$('checks').innerHTML='';$('gap').classList.add('hide');$('micro').classList.add('hide')};
+$('ans').onclick=()=>{
+  const v=document.querySelector('input[name=ix]:checked');if(!v){$('ansmsg').textContent='Pick one option first.';return}
+  if(v.value==='b'){$('ansmsg').textContent='Correct. The join looks up orders by customer_id, so that column needs the index.';$('badge').classList.add('on');$('seal').textContent='✓';$('bstat').textContent='Verified: query fixed and indexing understood';log('follow-up passed; record updated to verified')}
+  else{$('ansmsg').textContent='Not quite. Think about which column the join uses to find matching orders.';log('follow-up answer incorrect')}
+};
+</script>
+</body>
+</html>
